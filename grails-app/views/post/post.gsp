@@ -13,6 +13,10 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         $(function () {
+            currentUserName = "<%=session.getAttribute("userName")%>"
+            currentUserId = "<%=session.getAttribute("userId")%>"
+            currentUserState = "<%=session.getAttribute("userState")%>"
+            if(currentUserId=='')window.location.href='../user/login'
             $.ajax({
                 url:"pushPostData",
                 type:"post",
@@ -24,29 +28,42 @@
                 }
             })
             $("#btnCreatePost").click(function () {
-                var dataReady={'title':$("#textPostTitle").val(),'main':$("#textareaPostMain").val()}
-                $.ajax({
-                    url:'CreatePost',
-                    cache:false,
-                    type:'post',
-                    data:dataReady,
-                    error:function(info){
-                        alert("发布失败，未能成功向服务器发送数据")
-                    },
-                    success:function(info){
-                        alert(info)
-                        window.location.reload()
-                    }
-                })
+                if(currentUserState=='0'){
+                    alert("您已被封禁！")
+                }
+                else{
+                    var dataReady={'title':$("#textPostTitle").val(),'main':$("#textareaPostMain").val(),'userId':currentUserId}
+                    $.ajax({
+                        url:'CreatePost',
+                        cache:false,
+                        type:'post',
+                        data:dataReady,
+                        error:function(info){
+                            alert("发布失败，未能成功向服务器发送数据")
+                        },
+                        success:function(info){
+                            if(info==0){
+                                alert("标题不能为空")
+                            }
+                            else if(info=='baned'){
+                                alert("您已被封禁！")
+                            }
+                            else {
+                                alert(info)
+                                window.location.reload()
+                            }
+                        }
+                    })
+                }
             })
         })
         function showData(data) {
             var str = ""
             for(var i = 0;i<data.length;i++){
-                str = "<tr><td>" + data[i].id + "</td>" +
-                    "<td><a href='../comment/comment?"+data[i].id+"'>" + data[i].title + "</a></td>" +
-                    "<td>" + data[i].date + "</td>" +
-                    "<td>" + data[i].userId + "</td>"+
+                str = "<tr><td hidden>" + data[i][0] +
+                    "<td><a href='../comment/comment?"+data[i][0]+"'>" + data[i][1] + "</a></td>" +
+                    "<td>" + data[i][2] + "</td>" +
+                    "<td>" + data[i][3] + "</td>" +
                     "</tr>";
                 $("#tabBody").append(str);
             }
@@ -60,29 +77,33 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>
-                        帖子编号
+                    <th hidden style="width: 10%">
+                        贴子ID
                     </th>
-                    <th>
+                    <th style="width: 60%">
                         帖子名称
                     </th>
-                    <th>
+                    <th style="width: 20%">
                         发布时间
                     </th>
-                    <th>
+                    <th style="width: 10%">
                         作者
                     </th>
                 </tr>
                 </thead>
                 <tbody id="tabBody">
-
                 </tbody>
             </table>
         </div>
         <div class="col-md-2 column">
-            <p>当前用户:${'邱硕'}</p>
+            <p>当前用户:<%=session.getAttribute("userName")%></p>
             <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal">发帖</button>
-            <a href="../user/login">返回登录界面</a>
+            <a href="../user/login">退出登录</a>
+            <g:if test="session.getAttribute('userName')=='admin'">
+                <a href="../user/admin">前往管理页面</a>
+            </g:if>
+
+            <a href="../post/search"><button type="button" class="btn btn-default btn-lg">搜索</button></a>
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -101,6 +122,7 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal -->
             </div>
+
         </div>
     </div>
 </div>

@@ -7,5 +7,6 @@ class Post {
     int userId
     int zoneId
     static constraints = {
+        title(blank: false)
     }
 }

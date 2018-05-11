@@ -13,6 +13,10 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         $(function () {
+            currentUserName = "<%=session.getAttribute("userName")%>"
+            currentUserId = "<%=session.getAttribute("userId")%>"
+            currentUserState = "<%=session.getAttribute("userState")%>"
+            if(currentUserId=='')window.location.href='../user/login'
             var dataReady = {'pid': window.location.search.split('?')[1]}
             $.ajax({
                 data:dataReady,
@@ -37,20 +41,30 @@
                 }
             })
             $("#btnCreateComment").click(function () {
-                var dataReady={'main':$("#textareaCommentMain").val(),'pid':window.location.search.split('?')[1]}
-                $.ajax({
-                    url:'CreateComment',
-                    cache:false,
-                    type:'post',
-                    data:dataReady,
-                    error:function(info){
-                        alert("回复失败，未能成功向服务器发送数据")
-                    },
-                    success:function(info){
-                        alert(info)
-                        window.location.reload()
-                    }
-                })
+                if(currentUserState==0){
+                    alert("您已被封禁！")
+                }
+                else {
+                    var dataReady={'main':$("#textareaCommentMain").val(),'pid':window.location.search.split('?')[1],'userId':currentUserId}
+                    $.ajax({
+                        url:'CreateComment',
+                        cache:false,
+                        type:'post',
+                        data:dataReady,
+                        error:function(info){
+                            alert("回复失败，未能成功向服务器发送数据")
+                        },
+                        success:function(info){
+                            if(info=='baned') {
+                                alert("您已被封禁！")
+                            }
+                            else {
+                                alert(info)
+                                window.location.reload()
+                            }
+                        }
+                    })
+                }
             })
             $("#btnDeleteThis").click(function () {
                 var dataReady={'pid':window.location.search.split('?')[1]}
@@ -72,9 +86,9 @@
         function showData(data) {
             var str = ""
             for(var i = 0;i<data.length;i++){
-                str = "<tr><td>" + data[i].content + "</td>" +
-                    "<td>" + data[i].date + "</td>" +
-                    "<td>" + data[i].userId + "</td>"+
+                str = "<tr><td>" + data[i][0] + "</td>" +
+                    "<td>" + data[i][1] + "</td>" +
+                    "<td>" + data[i][2] + "</td>"+
                     "</tr>";
                 $("#tabBody").append(str);
             }
@@ -96,13 +110,13 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>
+                    <th style="width: 70%">
                         回复内容
                     </th>
-                    <th>
+                    <th style="width: 20%">
                         回复时间
                     </th>
-                    <th>
+                    <th style="width: 10%">
                         回复人
                     </th>
                 </tr>
@@ -113,11 +127,12 @@
             </table>
         </div>
         <div class="col-md-2 column">
-            <p>当前用户:${'邱硕'}</p>
+            <p>当前用户:<%=session.getAttribute("userName")%></p>
             <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal">发表回复</button>
             <a href="../post/post">返回帖子列表</a>
-            <button class="btn btn-primary btn-danger" id="btnDeleteThis" type="button">删除本帖</button>
-
+            <g:if test="${session.getAttribute('userName')=='admin'}">
+                <button class="btn btn-primary btn-danger" id="btnDeleteThis" type="button">删除本帖</button>
+            </g:if>
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">

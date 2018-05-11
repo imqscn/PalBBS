@@ -2,30 +2,46 @@ package palbbs
 
 import grails.converters.JSON
 
+
 class PostController {
-    def deleteAllPost(){
-        for(int i=0;i<100;i++){
-            Post p = Post.findById(i)
-            if(p)p.delete(flush: true)
+    def PostService
+    def deletePost(){
+        Post p = Post.findById(params.id as Integer)
+        try {
+            p.delete(flush:true)
+            render '1'
+        }catch (Exception e){
+            render '0'
         }
-        render("删除成功！")
     }
 
     def CreatePost(){
-        Post p = new Post()
-        p.title = params.title
-        p.content = params.main
-        p.date = new Date()
-        p.userId = 1
-        p.zoneId = 0
-        if(p.save()) render("发布成功！")
-        else render("发布失败，内容异常！"+"debug:"+p.pDate())
+        if(User.findById(params.userId as Integer).getState()==0) {
+            render 'baned'
+        }
+        else{
+            Post p = new Post()
+            p.title = params.title
+            p.content = params.main
+            p.date = new Date()
+            p.userId = params.userId as Integer
+            p.zoneId = 0
+            if(p.save()) render("发布成功！")
+            else render('0')
+        }
     }
 
     def pushPostData(){
-        def post = Post.all
-        render post as JSON
+        List list = PostService.getAllPost()
+        render list as JSON
     }
 
+    def pushSearchData(){
+        List list = PostService.search(params.word)
+        render list as JSON
+    }
+
+    def search(){ }
+    def deletePosts(){ }
     def post() { }
 }

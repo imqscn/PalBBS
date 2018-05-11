@@ -3,19 +3,25 @@ package palbbs
 import grails.converters.JSON
 
 class CommentController {
+    def CommentService
     def CreateComment(){
-        Comment c = new Comment()
-        c.content = params.main
-        c.date = new Date()
-        c.userId = 1
-        c.postId = params.pid.toInteger()
-        if(c.save()) render("发布成功！")
-        else render("回复失败，内容异常！"+"debug:"+c.cDate())
+        if(User.findById(params.userId as Integer).getState()==0) {
+            render 'baned'
+        }
+        else {
+            Comment c = new Comment()
+            c.content = params.main
+            c.date = new Date()
+            c.userId = params.userId.toInteger()
+            c.postId = params.pid.toInteger()
+            if(c.save()) render("发布成功！")
+            else render("回复失败，内容异常！"+"debug:"+c.date())
+        }
     }
 
     def pushCommentData(){
-        def comment = Comment.findAllByPostId(params.pid.toInteger())
-        render comment as JSON
+        List list = CommentService.getAllComment(params.pid.toInteger())
+        render list as JSON
     }
 
     def pushPostDataInCommentPage(){
