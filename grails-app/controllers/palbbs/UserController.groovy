@@ -1,5 +1,7 @@
 package palbbs
 
+import grails.converters.JSON
+
 class UserController {
     def signIn(){
         try {
@@ -20,6 +22,12 @@ class UserController {
         }
 
     }
+
+    def pullUserInfo(){
+        List list = User.list()
+        render list as JSON
+    }
+
     def adminSignIn(){
         try {
             User a = User.findByNameAndPw(params.name,params.password)

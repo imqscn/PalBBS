@@ -99,7 +99,7 @@
             <p>当前用户:<%=session.getAttribute("userName")%></p>
             <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal">发帖</button>
             <a href="../user/login">退出登录</a>
-            <g:if test="session.getAttribute('userName')=='admin'">
+            <g:if test="${session.getAttribute('userName')=='admin'}">
                 <a href="../user/admin">前往管理页面</a>
             </g:if>
 

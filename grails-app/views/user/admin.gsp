@@ -18,6 +18,35 @@
             if(currentUserName!='admin'){
                 window.location.href='../user/login'
             }
+
+            $("#btnBanModal").click(function () {
+                $.ajax({
+                    url:'pullUserInfo',
+                    cache:false,
+                    type:'post',
+                    error:function(data){
+                        alert("列出用户失败，未能成功向服务器发送请求")
+                    },
+                    success:function(data){
+                        showUserData(data)
+                    }
+                })
+            })
+
+            $("#btnDeBanModal").click(function () {
+                $.ajax({
+                    url:'pullUserInfo',
+                    cache:false,
+                    type:'post',
+                    error:function(data){
+                        alert("列出用户失败，未能成功向服务器发送请求")
+                    },
+                    success:function(data){
+                        showUserData(data)
+                    }
+                })
+            })
+
             $("#btnDeleteAllPost").click(function () {
                 $.ajax({
                     url:'../post/DeleteAllPost',
@@ -63,6 +92,19 @@
                 })
             })
         })
+        function showUserData(data) {
+            $("#tabBody").html("");
+            $("#tabBody2").html("");
+            var str = ""
+            for(var i = 0;i<data.length;i++){
+                str = "<tr><td>" + data[i].id + "</td>"+
+                    "<td>" + data[i].name + "</td>" +
+                    "<td>" + data[i].state + "</td>" +
+                    "</tr>";
+                $("#tabBody").append(str);
+                $("#tabBody2").append(str);
+            }
+        }
     </script>
 </head>
 <body>
@@ -71,9 +113,9 @@
         <div class="col-md-4 column">
         </div>
         <div class="col-md-4 column">
-            <a href="../post/deletePosts"><button type="button" class="btn btn-lg btn-danger btn-block">删除所有帖子</button></a>
-            <button type="button" class="btn btn-lg btn-warning btn-block" data-toggle="modal" data-target="#banUserModal">封禁用户</button>
-            <button type="button" class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#deBanUserModal">解封用户</button>
+            <a href="../post/deletePosts"><button type="button" class="btn btn-lg btn-danger btn-block">批量删除帖子</button></a>
+            <button type="button" class="btn btn-lg btn-warning btn-block" id="btnBanModal" data-toggle="modal" data-target="#banUserModal">封禁用户</button>
+            <button type="button" class="btn btn-lg btn-success btn-block" id="btnDeBanModal" data-toggle="modal" data-target="#deBanUserModal">解封用户</button>
             <a href="../post/post">返回帖子列表</a>
             <a href="../user/login">返回登录界面</a>
             <div class="modal fade" id="banUserModal" tabindex="-1" role="dialog" aria-labelledby="banUserModalLabel" aria-hidden="true">
@@ -85,6 +127,26 @@
                         </div>
                         <div>
                             <input type="text" id="inputBanUserId" class="form-control" placeholder="输入要封禁的ID" required autofocus>
+                        </div>
+                        <div>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        用户ID
+                                    </th>
+                                    <th>
+                                        用户名
+                                    </th>
+                                    <th>
+                                        状态（0代表被封禁）
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody id="tabBody">
+
+                                </tbody>
+                            </table>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -103,24 +165,29 @@
                         <div>
                             <input type="text" id="inputDeBanUserId" class="form-control" placeholder="输入要解封的ID" required autofocus>
                         </div>
+                        <div>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        用户ID
+                                    </th>
+                                    <th>
+                                        用户名
+                                    </th>
+                                    <th>
+                                        状态（0代表被封禁）
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody id="tabBody2">
+
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal" id="btnDeBanUser">确认解封</button>
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal -->
-            </div>
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">删除所有帖子</h4>
-                        </div>
-                        <div class="modal-body">确认删除所有帖子吗？</div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-danger" id="btnDeleteAllPost">确认删除</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal -->
