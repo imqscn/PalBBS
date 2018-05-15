@@ -6,5 +6,6 @@ class Zone {
     Date date
     int uId
     static constraints = {
+        title(blank: false)
     }
 }

@@ -85,8 +85,8 @@
             </table>
         </div>
         <div class="col-md-2 column">
-            <p>当前用户:<%=session.getAttribute("userName")%></p>
-            <a href="../post/post">返回帖子列表</a>
+            <p>当前用户:<a href="../user/myinfo"><%=session.getAttribute("userName")%></a></p>
+            <a href="../zone/zone">返回版块列表</a>
             </div>
         </div>
     </div>

@@ -25,14 +25,19 @@ class PostController {
             p.content = params.main
             p.date = new Date()
             p.userId = params.userId as Integer
-            p.zoneId = 0
+            p.zoneId = params.zid as Integer
             if(p.save()) render("发布成功！")
             else render('0')
         }
     }
 
     def pushPostData(){
-        List list = PostService.getAllPost()
+        List list = PostService.getAllPost(params.zid)
+        render list as JSON
+    }
+
+    def pushPostDataForDeleteMore(){
+        List list = PostService.getAllPostForDeleteMore()
         render list as JSON
     }
 

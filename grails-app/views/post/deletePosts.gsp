@@ -19,7 +19,7 @@
                 window.location.href='../user/login'
             }
             $.ajax({
-                url:"pushPostData",
+                url:"pushPostDataForDeleteMore",
                 type:"post",
                 success:function (data) {
                     showData(data);
@@ -109,7 +109,7 @@
             </table>
         </div>
         <div class="col-md-2 column">
-            <p>当前用户:<%=session.getAttribute("userName")%></p>
+            <p>当前用户:<a href="../user/myinfo"><%=session.getAttribute("userName")%></a></p>
             <button class="btn btn-danger btn-block" id="btnDeleteSelectPost">批量删除帖子</button>
             <a href="../post/post">返回帖子列表</a>
             <a href="../user/admin">返回管理页面</a>

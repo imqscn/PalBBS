@@ -81,6 +81,32 @@ class UserController {
             render "解封成功"
         }
     }
+
+    def changeName(){
+        User u = User.findById(params.id as Integer)
+        if(u){
+            u.name = params.name
+            if(u.save(flush:true)){
+                session.setAttribute("userName","")
+                session.setAttribute("userName",params.name)
+                render "修改用户名成功"
+            }
+            else render "修改失败，用户名为空或与他人重复"
+        }
+    }
+
+    def changePw(){
+        User u = User.findById(params.id as Integer)
+        if(u){
+            u.pw = params.pw
+            if(u.save(flush:true)){
+                render "修改密码成功"
+            }
+            else render "修改失败，密码不能为空"
+        }
+    }
+
     def login() { }
     def admin() { }
+    def myinfo(){ }
 }

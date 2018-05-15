@@ -27,7 +27,7 @@
                     success:function(info){
                         alert(info)
                         if(info =="登录成功，关闭对话框后跳转！")
-                            window.location.href="../post/post"
+                            window.location.href="../zone/zone"
                     }
                 });
 

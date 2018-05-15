@@ -96,6 +96,7 @@
         function showPost(data) {
             $("#title").append(data.title);
             $("#main").append(data.content);
+            $("#linkBackToPost").attr("href","../post/post?"+data.zoneId)
         }
     </script>
 </head>
@@ -127,9 +128,9 @@
             </table>
         </div>
         <div class="col-md-2 column">
-            <p>当前用户:<%=session.getAttribute("userName")%></p>
+            <p>当前用户:<a href="../user/myinfo"><%=session.getAttribute("userName")%></a></p>
             <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal">发表回复</button>
-            <a href="../post/post">返回帖子列表</a>
+            <a id="linkBackToPost" href="#">返回帖子列表</a>
             <g:if test="${session.getAttribute('userName')=='admin'}">
                 <button class="btn btn-primary btn-danger" id="btnDeleteThis" type="button">删除本帖</button>
             </g:if>

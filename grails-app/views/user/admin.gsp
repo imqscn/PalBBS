@@ -116,7 +116,7 @@
             <a href="../post/deletePosts"><button type="button" class="btn btn-lg btn-danger btn-block">批量删除帖子</button></a>
             <button type="button" class="btn btn-lg btn-warning btn-block" id="btnBanModal" data-toggle="modal" data-target="#banUserModal">封禁用户</button>
             <button type="button" class="btn btn-lg btn-success btn-block" id="btnDeBanModal" data-toggle="modal" data-target="#deBanUserModal">解封用户</button>
-            <a href="../post/post">返回帖子列表</a>
+            <a href="../zone/zone">返回版块列表</a>
             <a href="../user/login">返回登录界面</a>
             <div class="modal fade" id="banUserModal" tabindex="-1" role="dialog" aria-labelledby="banUserModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
